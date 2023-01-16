@@ -12,7 +12,7 @@ class PostRateEvent(enum.Enum):
 
 @dataclasses.dataclass(slots=True)
 class Post:
-    id: uuid.UUID
+    id: uuid.UUID  # noqa: VNE003
     user_id: uuid.UUID
     text: str
     likes: int
