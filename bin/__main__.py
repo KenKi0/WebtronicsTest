@@ -46,9 +46,9 @@ def main() -> None:
                 asyncio.run(run())
     except SystemExit:
         exit(os.EX_OK)
-    except BaseException:
-        logger.exception("Unexpected error occurred")
-        exit(os.EX_SOFTWARE)
+    # except BaseException:
+    #     logger.exception("Unexpected error occurred")
+    #     exit(os.EX_SOFTWARE)
 
 
 if __name__ == '__main__':

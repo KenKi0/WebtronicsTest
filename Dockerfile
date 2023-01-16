@@ -21,5 +21,7 @@ RUN poetry config virtualenvs.create false && \
 
 COPY src/ ./src
 COPY bin/ ./bin
+COPY migrations/ ./migrations
+COPY alembic.ini alembic.ini
 
 CMD ["python", "-m", "bin", "run"]
