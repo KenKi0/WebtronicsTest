@@ -20,7 +20,7 @@ router = fastapi.APIRouter(prefix='/user')
 async def get_user_posts(
         user_id: uuid.UUID,
         service: UserServiceProtocol = fastapi.Depends(get_user_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ) -> list[post_http_mdl.PostResponse]:
     posts = await service.get_user_posts(user_id)
     return [post_http_mdl.PostResponse.parse_obj(asdict(post)) for post in posts]
@@ -34,7 +34,7 @@ async def change_user_info(
         user_id: uuid.UUID,
         payload: user_http_mdl.UserUpdateRequest,
         service: UserServiceProtocol = fastapi.Depends(get_user_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required),
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.update_user_info(user_id, payload)

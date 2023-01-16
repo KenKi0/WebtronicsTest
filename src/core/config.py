@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import BaseSettings
 
 
-LogLevel = typing.Literal["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+LogLevel = typing.Literal['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
 
 
 class BaseConfig(BaseSettings):
@@ -50,8 +50,8 @@ class ProjectSettings(BaseConfig):
     jwt_settings: JWTSettings = JWTSettings()
 
     debug: bool = True
-    logs_min_level: LogLevel = "DEBUG"
-    logs_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    logs_min_level: LogLevel = 'DEBUG'
+    logs_format: str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 
 @functools.lru_cache()

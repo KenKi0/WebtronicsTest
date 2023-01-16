@@ -18,7 +18,7 @@ router = fastapi.APIRouter(prefix='/post')
 async def create_post(
         payload: post_http_mdl.PostCreateRequest,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required),
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     await service.create_post(payload)
 
@@ -30,7 +30,7 @@ async def create_post(
 async def get_post(
         post_id: uuid.UUID,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.get_post(post_id)
@@ -47,7 +47,7 @@ async def change_post(
         post_id: uuid.UUID,
         payload: post_http_mdl.PostUpdateRequest,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.update_post(post_id, payload)
@@ -63,7 +63,7 @@ async def change_post(
 async def delete_post(
         post_id: uuid.UUID,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.delete_post(post_id)
@@ -79,7 +79,7 @@ async def delete_post(
 async def like_post(
         post_id: uuid.UUID,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: uuid.UUID = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.rate_post(user, post_id, post_internal_mdl.PostRateEvent.like)
@@ -98,7 +98,7 @@ async def like_post(
 async def dislike_post(
         post_id: uuid.UUID,
         service: PostServiceProtocol = fastapi.Depends(get_post_service),
-        user: str = fastapi.Depends(Auth.login_required)
+        user: str = fastapi.Depends(Auth.login_required),
 ):
     try:
         await service.rate_post(user, post_id, post_internal_mdl.PostRateEvent.dislike)

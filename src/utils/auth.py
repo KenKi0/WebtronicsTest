@@ -12,7 +12,7 @@ from src.core.config import settings
 
 class Auth:
     security = HTTPBearer()
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
     def get_password_hash(self, password) -> str:
         return self.pwd_context.hash(password)
@@ -24,7 +24,7 @@ class Auth:
         payload = {
             'exp': datetime.utcnow() + timedelta(minutes=settings.jwt_settings.access_token_expire),
             'iat': datetime.utcnow(),
-            'sub': str(user_id)
+            'sub': str(user_id),
         }
         return jwt.encode(
             payload,
@@ -33,7 +33,7 @@ class Auth:
         )
 
     @staticmethod
-    def decode_token(token: str) -> uuid.UUID:
+    def decode_token(token: str) -> str:
         try:
             payload = jwt.decode(token,
                                  settings.jwt_settings.secret_key,
@@ -52,7 +52,7 @@ class Auth:
             'exp': datetime.utcnow() + timedelta(hours=settings.jwt_settings.refresh_token_expire),
             'iat': datetime.utcnow(),
             'scope': 'refresh_token',
-            'sub': str(user_id)
+            'sub': str(user_id),
         }
         return jwt.encode(
             payload,
@@ -80,7 +80,7 @@ class Auth:
                                         detail='Invalid refresh token')
 
     @staticmethod
-    def login_required(credentials: HTTPAuthorizationCredentials = fastapi.Security(security)) -> uuid.UUID:
+    def login_required(credentials: HTTPAuthorizationCredentials = fastapi.Security(security)) -> str:
         token = credentials.credentials
         return Auth.decode_token(token)
 

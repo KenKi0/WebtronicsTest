@@ -12,11 +12,11 @@ class SignUpRequest(Base):
 
     @root_validator()
     def verify_password_match(cls, values):
-        password = values.get("password")
-        confirm_password = values.get("confirm_password")
+        password = values.get('password')
+        confirm_password = values.get('confirm_password')
 
         if password != confirm_password:
-            raise ValueError("The two passwords did not match.")
+            raise ValueError('The two passwords did not match.')
         return values
 
 

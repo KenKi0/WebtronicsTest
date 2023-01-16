@@ -13,7 +13,7 @@ router = fastapi.APIRouter(prefix='/auth')
              tags=['Auth'])
 async def signup(
         payload: auth_http_models.SignUpRequest,
-        service: AuthServiceProtocol = fastapi.Depends(get_auth_service)
+        service: AuthServiceProtocol = fastapi.Depends(get_auth_service),
 ):
     try:
         await service.register(payload)

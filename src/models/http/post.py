@@ -13,7 +13,7 @@ class PostUpdateRequest(Base):
 
 
 class PostResponse(Base):
-    id: uuid.UUID
+    id: uuid.UUID  # noqa: VNE003
     user_id: uuid.UUID
     text: str
     likes: int

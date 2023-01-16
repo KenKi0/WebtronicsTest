@@ -38,7 +38,7 @@ class PostRepositoryProtocol(typing.Protocol):
             self,
             user_id: str,
             post_id: uuid.UUID,
-            updated_event: post_internal_mdl.PostRateEvent
+            updated_event: post_internal_mdl.PostRateEvent,
     ) -> None:
         """
         :raises RateYourselfPostsError: if user trying to rate their posts
@@ -89,7 +89,7 @@ class PostSqlalchemyRepository(PostRepositoryProtocol):
             self,
             user_id: str,
             post_id: uuid.UUID,
-            updated_event: post_internal_mdl.PostRateEvent
+            updated_event: post_internal_mdl.PostRateEvent,
     ) -> None:
         query = sqlalchemy.select(Posts).where(Posts.id == post_id)
         async with session_maker() as session:

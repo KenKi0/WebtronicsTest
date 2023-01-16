@@ -41,7 +41,7 @@ class PostServiceProtocol(typing.Protocol):
             self,
             user_id: str,
             post_id: uuid.UUID,
-            rate_event: post_internal_mdl.PostRateEvent
+            rate_event: post_internal_mdl.PostRateEvent,
     ) -> None:
         """
         :raises NotFoundError: if raw with specified post_id doesnt exist
@@ -86,7 +86,7 @@ class PostService(PostServiceProtocol):
             self,
             user_id: str,
             post_id: uuid.UUID,
-            rate_event: post_internal_mdl.PostRateEvent
+            rate_event: post_internal_mdl.PostRateEvent,
     ) -> None:
         try:
             await self.__post_repo.update_post_rates(user_id, post_id, rate_event)

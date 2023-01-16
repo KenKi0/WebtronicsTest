@@ -5,7 +5,6 @@ from sqlalchemy import TIMESTAMP, Column
 from sqlalchemy.dialects.postgresql import UUID
 from src.db.sqlalch.core import Base
 
-
 NON_TABLE_COLUMNS: set = {'created_at', 'updated_at'}
 
 
@@ -23,5 +22,5 @@ class BaseModel(Base):
         exclude_columns = set() if exclude is None else exclude
         if exclude_non_tabel_columns:
             exclude_columns.update(NON_TABLE_COLUMNS)
-        return dict((column.name, getattr(self, column.name))
-                    for column in self.__table__.columns if column.name not in exclude_columns)
+        return {column.name: getattr(self, column.name)
+                for column in self.__table__.columns if column.name not in exclude_columns}

@@ -70,7 +70,7 @@ class AuthService:
 @lru_cache()
 def get_auth_service(
         user_repo: repo.UserRepositoryProtocol = fastapi.Depends(repo.get_user_repo),
-        auth: Auth = fastapi.Depends(get_auth)
+        auth: Auth = fastapi.Depends(get_auth),
 ) -> AuthServiceProtocol:
     return AuthService(user_repo, auth)
 
@@ -79,4 +79,3 @@ __all__ = [
     'AuthServiceProtocol',
     'get_auth_service',
 ]
-
