@@ -20,9 +20,9 @@ class BaseConfig(BaseSettings):
 class PostgresSettings(BaseConfig):
     host: str = 'localhost'
     port: int = 5432
-    db: str = 'test3'
+    db: str = 'test_db'
     user: str = 'postgres'
-    password: str = 'nipomu54'
+    password: str = 'password'
 
     class Config:
         env_prefix = 'PG_'
