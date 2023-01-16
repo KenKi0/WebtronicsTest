@@ -22,4 +22,4 @@ RUN poetry config virtualenvs.create false && \
 COPY src/ ./src
 COPY bin/ ./bin
 
-CMD ['python', '-m', 'bin', 'run']
+CMD ["python", "-m", "bin", "run"]

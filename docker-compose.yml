@@ -19,12 +19,12 @@ services:
       context: .
       args:
         PROJECT_ENV: production
-    env_file:
-      - .env
     depends_on:
       - db
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     restart: always
 
 volumes:

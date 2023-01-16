@@ -44,7 +44,7 @@ class JWTSettings(BaseConfig):
 
 class ProjectSettings(BaseConfig):
     project_name: str = 'Webtronics Test'
-    project_host: str = 'localhost'
+    project_host: str = '0.0.0.0'
     project_port: int = 8000
     postgres_settings: PostgresSettings = PostgresSettings()
     jwt_settings: JWTSettings = JWTSettings()
