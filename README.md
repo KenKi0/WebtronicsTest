@@ -10,8 +10,8 @@
    ```sh
    $ git clone git@github.com:KenKi2002/WebtronicsTest.git
    ```
-2. Define environment variables
-    Create .env file in the root of project and fill it in like .env.sample.
+2. Define environment variables.  
+    Create .env file in the root of project and fill it in like .env.sample.  
     NOTE: set pg_host as db is reqiered
 
 3. Build and run docker compose by predefined `make` command.
@@ -43,7 +43,7 @@
    (venv) $ poetry install
    ```
 
-4. Define environment variables
+4. Define environment variables.  
     Create .env file in the root of project and fill it in like .env.sample
     
 5. Migrate database.
