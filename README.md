@@ -55,3 +55,5 @@
     ```sh
    (venv) $ python -m bin run
    ```
+## Usage.  
+All api info be on the link /api/v1/docs/openapi
