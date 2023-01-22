@@ -16,7 +16,8 @@ services:
 
   webtronics:
     build:
-      context: .
+      context: ..
+      dockerfile: ./deployment/Dockerfile
       args:
         PROJECT_ENV: production
     depends_on:

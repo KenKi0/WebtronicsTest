@@ -7,7 +7,7 @@ import sys
 import uvicorn
 from src.main import app
 from src.core.config import settings
-from src.db.sqlalch.core import init_models
+from src.infrastructure.database.core import init_models
 from src.core.logs import configure_log
 
 
@@ -46,9 +46,9 @@ def main() -> None:
                 asyncio.run(run())
     except SystemExit:
         exit(os.EX_OK)
-    # except BaseException:
-    #     logger.exception("Unexpected error occurred")
-    #     exit(os.EX_SOFTWARE)
+    except BaseException:
+        logger.exception("Unexpected error occurred")
+        exit(os.EX_SOFTWARE)
 
 
 if __name__ == '__main__':

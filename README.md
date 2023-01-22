@@ -11,8 +11,8 @@
    $ git clone git@github.com:KenKi2002/WebtronicsTest.git
    ```
 2. Define environment variables.  
-    Create .env file in the root of project and fill it in like .env.sample.  
-    NOTE: set pg_host as db is reqiered
+    Create .env file in the deployment folder of project and fill it in like .env.sample.  
+    NOTE: set pg_host as db is required
 
 3. Build and run docker compose by predefined `make` command.
     ```sh
@@ -48,7 +48,7 @@
     
 5. Migrate database.
     ```sh
-   (venv) $ alembic upgrade head
+   (venv) $ alembic -c 'deployment/alembic.ini' upgrade head
    ```
 
 6. Run service.

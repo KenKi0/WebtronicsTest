@@ -2,9 +2,8 @@
 # Go there to find more details: https://makefiletutorial.com/#variables
 
 migrate:
-	docker-compose exec worker alembic upgrade head
+	docker-compose -f ./deployment/docker-compose.yml exec webtronics alembic upgrade head
 
 app:
-	docker-compose build
-	docker-compose up -d
+	docker-compose -f ./deployment/docker-compose.yml up -d --build
 	make migrate

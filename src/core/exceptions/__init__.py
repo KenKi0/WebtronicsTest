@@ -1,6 +1,5 @@
-from src.core.exceptions.repository import NotFoundError, UniqueFieldError, RateYourselfPostsError
 from src.core.exceptions.auth import InvalidPassword
-
+from src.core.exceptions.repository import NotFoundError, RateYourselfPostsError, UniqueFieldError
 
 __all__ = [
     'NotFoundError',

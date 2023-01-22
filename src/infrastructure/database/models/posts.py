@@ -1,7 +1,7 @@
-from sqlalchemy import Column, ForeignKey, Text, Integer
-
-from src.db.sqlalch.models.base import BaseModel
+from sqlalchemy import Column, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import UUID
+
+from src.infrastructure.database.models.base import BaseModel
 
 
 class Posts(BaseModel):

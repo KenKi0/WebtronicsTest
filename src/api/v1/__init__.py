@@ -1,9 +1,9 @@
 import fastapi
 
-import src.api.v1.healthcheck as healthcheck_routing
 import src.api.v1.auth as auth_routing
-import src.api.v1.user as user_routing
+import src.api.v1.healthcheck as healthcheck_routing
 import src.api.v1.post as post_routing
+import src.api.v1.user as user_routing
 
 v1_app = fastapi.FastAPI(
     version='1',

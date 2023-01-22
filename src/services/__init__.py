@@ -1,13 +1,16 @@
-from src.services.auth import AuthServiceProtocol, get_auth_service
-from src.services.user import UserServiceProtocol, get_user_service
-from src.services.post import PostServiceProtocol, get_post_service
-
+from src.services.auth import IAuthService, auth_service
+from src.services.post import IPostService, post_service
+from src.services.providers import auth_service_provider, post_service_provider, user_service_provider
+from src.services.user import IUserService, user_service
 
 __all__ = [
-    'AuthServiceProtocol',
-    'get_auth_service',
-    'UserServiceProtocol',
-    'get_user_service',
-    'PostServiceProtocol',
-    'get_post_service',
+    'IAuthService',
+    'auth_service',
+    'auth_service_provider',
+    'IUserService',
+    'user_service',
+    'user_service_provider',
+    'IPostService',
+    'post_service',
+    'post_service_provider',
 ]

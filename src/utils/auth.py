@@ -1,10 +1,10 @@
 import uuid
-from functools import lru_cache
 from datetime import datetime, timedelta
+from functools import lru_cache
 
-import jwt
 import fastapi
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import jwt
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 
 from src.core.config import settings
@@ -35,16 +35,14 @@ class Auth:
     @staticmethod
     def decode_token(token: str) -> str:
         try:
-            payload = jwt.decode(token,
-                                 settings.jwt_settings.secret_key,
-                                 algorithms=[settings.jwt_settings.algorithm])
+            payload = jwt.decode(token, settings.jwt_settings.secret_key, algorithms=[settings.jwt_settings.algorithm])
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
-                                        detail='Signature has expired')
+            raise fastapi.HTTPException(
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Signature has expired'
+            )
         except jwt.InvalidTokenError:
-            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
-                                        detail='Invalid token')
+            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
 
     @staticmethod
     def encode_refresh_token(user_id: uuid.UUID) -> str:
@@ -62,27 +60,38 @@ class Auth:
 
     def refresh_tokens(self, refresh_token) -> tuple[str, str]:
         try:
-            payload = jwt.decode(refresh_token,
-                                 settings.jwt_settings.secret_key,
-                                 algorithms=[settings.jwt_settings.algorithm])
+            payload = jwt.decode(
+                refresh_token, settings.jwt_settings.secret_key, algorithms=[settings.jwt_settings.algorithm]
+            )
             if payload['scope'] == 'refresh_token':
                 user_id = payload['sub']
                 new_token = self.encode_token(user_id)
                 new_refresh_token = self.encode_refresh_token(user_id)
                 return new_token, new_refresh_token
-            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
-                                        detail='Invalid scope for token')
+            raise fastapi.HTTPException(
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token'
+            )
         except jwt.ExpiredSignatureError:
-            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
-                                        detail='Refresh token expired')
+            raise fastapi.HTTPException(
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Refresh token expired'
+            )
         except jwt.InvalidTokenError:
-            raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
-                                        detail='Invalid refresh token')
+            raise fastapi.HTTPException(
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token'
+            )
 
     @staticmethod
-    def login_required(credentials: HTTPAuthorizationCredentials = fastapi.Security(security)) -> str:
+    def login_required(
+        request: fastapi.Request,
+        credentials: HTTPAuthorizationCredentials = fastapi.Security(security),
+    ) -> None:
         token = credentials.credentials
-        return Auth.decode_token(token)
+        user: str = Auth.decode_token(token)
+        request.state.user = user
+
+    @staticmethod
+    def get_user(request: fastapi.Request) -> str:
+        return request.state.user
 
 
 @lru_cache()

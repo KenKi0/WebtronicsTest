@@ -13,15 +13,14 @@ RUN apt-get update && \
 
 RUN pip install --no-cache-dir poetry==1.1.14
 
-COPY poetry.lock poetry.lock
-COPY pyproject.toml pyproject.toml
+COPY ./poetry.lock poetry.lock
+COPY ./pyproject.toml pyproject.toml
 
 RUN poetry config virtualenvs.create false && \
     poetry install $(test "$PROJECT_ENV" = production && echo "--no-dev") --no-interaction --no-ansi
 
-COPY src/ ./src
-COPY bin/ ./bin
-COPY migrations/ ./migrations
-COPY alembic.ini alembic.ini
+COPY ./src ./src
+COPY ./bin ./bin
+COPY ./deployment/alembic.ini alembic.ini
 
 CMD ["python", "-m", "bin", "run"]

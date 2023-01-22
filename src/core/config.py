@@ -4,14 +4,13 @@ from pathlib import Path
 
 from pydantic import BaseSettings
 
-
 LogLevel = typing.Literal['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
 
 
 class BaseConfig(BaseSettings):
     class Config:
         __BASE_DIR_PATH = Path(__file__).parent.parent.parent
-        __ENV_FILE_PATH = __BASE_DIR_PATH / '.env'
+        __ENV_FILE_PATH = __BASE_DIR_PATH / 'deployment' / '.env'
 
         env_file = __ENV_FILE_PATH
         env_file_encoding = 'utf-8'
@@ -20,9 +19,9 @@ class BaseConfig(BaseSettings):
 class PostgresSettings(BaseConfig):
     host: str = 'localhost'
     port: int = 5432
-    db: str = 'test_db'
+    db: str = 'test'
     user: str = 'postgres'
-    password: str = 'password'
+    password: str = 'nipomu54'
 
     class Config:
         env_prefix = 'PG_'
