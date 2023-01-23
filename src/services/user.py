@@ -6,7 +6,7 @@ from functools import lru_cache
 import fastapi
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
 import src.infrastructure.database.repositories as repo
 import src.models.dto.post as post_internal_mdl
 import src.models.http.user as user_http_mdl
@@ -48,10 +48,10 @@ class UserService(IUserService):
     ) -> None:
         try:
             await self.__user_repo.update(user_id, updated_fields, session)
-        except exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to update non-existent user with id: %s', user_id, exc_info=e)
             raise
-        except exc.UniqueFieldError as e:
+        except domain_exc.UniqueFieldError as e:
             logger.info('Constraint error during update user fields', exc_info=e)
             raise
 

@@ -1,6 +1,7 @@
 import fastapi
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
+import src.api.exceptions.exceptions as api_exc
 import src.models.http.auth as auth_http_models
 from src.infrastructure.database.core import AsyncSession, session_provider
 from src.services import IAuthService, auth_service_provider
@@ -16,8 +17,8 @@ async def signup(
 ):
     try:
         await service.register(payload, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail='User not found')
+    except domain_exc.UniqueFieldError:
+        raise api_exc.EntityAlreadyExistException('User')
 
 
 @router.post('/login', status_code=fastapi.status.HTTP_200_OK, description='Login into service', tags=['Auth'])
@@ -28,7 +29,7 @@ async def login(
 ):
     try:
         return await service.login(payload, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail='User not found')
-    except exc.InvalidPassword:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail='Wrong password')
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('User')
+    except domain_exc.InvalidPassword:
+        raise api_exc.WrongPasswordException
