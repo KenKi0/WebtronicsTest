@@ -5,7 +5,7 @@ from functools import lru_cache
 import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
 import src.models.dto.post as post_internal_mdl
 import src.models.http.post as post_http_mdl
 from src.infrastructure.database.models.posts import Posts
@@ -70,7 +70,7 @@ class PostSqlalchemyRepository(IPostRepository):
         query = sqlalchemy.update(Posts).where(Posts.id == post_id).values(**updated_fields.dict(exclude_none=True))
         result: sqlalchemy.engine.cursor.CursorResult = await session.execute(query)  # type: ignore
         if result.rowcount == 0:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         await session.commit()
 
     async def get(self, post_id: uuid.UUID, session: AsyncSession) -> post_internal_mdl.Post:
@@ -78,14 +78,14 @@ class PostSqlalchemyRepository(IPostRepository):
         result: sqlalchemy.engine.Result = await session.execute(query)
         post: Posts | None = result.scalars().one_or_none()
         if post is None:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         return post_internal_mdl.Post(**post.as_dict(exclude_non_tabel_columns=True))
 
     async def delete(self, post_id: uuid.UUID, session: AsyncSession) -> None:
         query = sqlalchemy.delete(Posts).where(Posts.id == post_id)
         result: sqlalchemy.engine.cursor.CursorResult = await session.execute(query)  # type: ignore
         if result.rowcount == 0:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         await session.commit()
 
     async def update_post_rates(
@@ -99,9 +99,9 @@ class PostSqlalchemyRepository(IPostRepository):
         result: sqlalchemy.engine.Result = await session.execute(query)
         post: Posts | None = result.scalars().one_or_none()
         if post is None:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         if str(post.user_id) == user_id:
-            raise exc.RateYourselfPostsError
+            raise domain_exc.RateYourselfPostsError
         match updated_event:
             case post_internal_mdl.PostRateEvent.like:
                 post.likes += 1  # type: ignore

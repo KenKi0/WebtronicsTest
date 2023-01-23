@@ -6,7 +6,7 @@ from functools import lru_cache
 import fastapi
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
 import src.infrastructure.database.repositories as repo
 import src.models.dto.post as post_internal_mdl
 import src.models.http.post as post_http_mdl
@@ -73,21 +73,21 @@ class PostService(IPostService):
     ) -> None:
         try:
             await self.__post_repo.update(post_id, updated_fields, session)
-        except exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to update non-existent post with id: %s', post_id, exc_info=e)
             raise
 
     async def get_post(self, post_id: uuid.UUID, session: AsyncSession) -> post_internal_mdl.Post:
         try:
             return await self.__post_repo.get(post_id, session)
-        except exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to get non-existent post with id: %s', post_id, exc_info=e)
             raise
 
     async def delete_post(self, post_id: uuid.UUID, session: AsyncSession) -> None:
         try:
             await self.__post_repo.delete(post_id, session)
-        except exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to delete non-existent post with id: %s', post_id, exc_info=e)
             raise
 
@@ -100,10 +100,10 @@ class PostService(IPostService):
     ) -> None:
         try:
             await self.__post_repo.update_post_rates(user_id, post_id, rate_event, session)
-        except exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to rate non-existent post with id: %s', post_id, exc_info=e)
             raise
-        except exc.RateYourselfPostsError as e:
+        except domain_exc.RateYourselfPostsError as e:
             logger.info('Trying to rate yourself posts by user_id: %s', user_id, exc_info=e)
             raise
 

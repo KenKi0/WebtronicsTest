@@ -39,7 +39,8 @@ class Auth:
             return payload['sub']
         except jwt.ExpiredSignatureError:
             raise fastapi.HTTPException(
-                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Signature has expired'
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
+                detail='Signature has expired',
             )
         except jwt.InvalidTokenError:
             raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
@@ -61,7 +62,9 @@ class Auth:
     def refresh_tokens(self, refresh_token) -> tuple[str, str]:
         try:
             payload = jwt.decode(
-                refresh_token, settings.jwt_settings.secret_key, algorithms=[settings.jwt_settings.algorithm]
+                refresh_token,
+                settings.jwt_settings.secret_key,
+                algorithms=[settings.jwt_settings.algorithm],
             )
             if payload['scope'] == 'refresh_token':
                 user_id = payload['sub']
@@ -69,15 +72,18 @@ class Auth:
                 new_refresh_token = self.encode_refresh_token(user_id)
                 return new_token, new_refresh_token
             raise fastapi.HTTPException(
-                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token'
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
+                detail='Invalid scope for token',
             )
         except jwt.ExpiredSignatureError:
             raise fastapi.HTTPException(
-                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Refresh token expired'
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
+                detail='Refresh token expired',
             )
         except jwt.InvalidTokenError:
             raise fastapi.HTTPException(
-                status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token'
+                status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
+                detail='Invalid refresh token',
             )
 
     @staticmethod

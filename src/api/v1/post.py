@@ -2,7 +2,8 @@ import uuid
 
 import fastapi
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
+import src.api.exceptions.exceptions as api_exc
 import src.models.dto.post as post_internal_mdl
 import src.models.http.post as post_http_mdl
 from src.infrastructure.database.core import AsyncSession, session_provider
@@ -41,10 +42,8 @@ async def get_post(
 ) -> None:
     try:
         await service.get_post(post_id, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'Post with id: {post_id}, doesnt exist'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('Post', post_id)
 
 
 @router.patch(
@@ -62,10 +61,8 @@ async def change_post(
 ) -> None:
     try:
         await service.update_post(post_id, payload, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'Post with id: {post_id}, doesnt exist'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('Post', post_id)
 
 
 @router.delete(
@@ -82,10 +79,8 @@ async def delete_post(
 ) -> None:
     try:
         await service.delete_post(post_id, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'Post with id: {post_id}, doesnt exist'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('Post', post_id)
 
 
 @router.post(
@@ -103,14 +98,10 @@ async def like_post(
 ) -> None:
     try:
         await service.rate_post(user, post_id, post_internal_mdl.PostRateEvent.like, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'Post with id: {post_id}, doesnt exist'
-        )
-    except exc.RateYourselfPostsError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail='You didnt rate yourself posts'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('Post', post_id)
+    except domain_exc.RateYourselfPostsError:
+        raise api_exc.RateYourselfPostException
 
 
 @router.post(
@@ -128,11 +119,7 @@ async def dislike_post(
 ) -> None:
     try:
         await service.rate_post(user, post_id, post_internal_mdl.PostRateEvent.dislike, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'Post with id: {post_id}, doesnt exist'
-        )
-    except exc.RateYourselfPostsError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail='You didnt rate yourself posts'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('Post', post_id)
+    except domain_exc.RateYourselfPostsError:
+        raise api_exc.RateYourselfPostException

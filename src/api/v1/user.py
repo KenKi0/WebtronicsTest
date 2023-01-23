@@ -3,7 +3,8 @@ from dataclasses import asdict
 
 import fastapi
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
+import src.api.exceptions.exceptions as api_exc
 import src.models.http.post as post_http_mdl
 import src.models.http.user as user_http_mdl
 from src.infrastructure.database.core import AsyncSession, session_provider
@@ -45,11 +46,7 @@ async def change_user_info(
 ) -> None:
     try:
         await service.update_user_info(user_id, payload, session)
-    except exc.NotFoundError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND, detail=f'User with id: {user_id}, doesnt exist'
-        )
-    except exc.UniqueFieldError:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail='User with specified fields already exist'
-        )
+    except domain_exc.NotFoundError:
+        raise api_exc.EntityNotFoundException('User', user_id)
+    except domain_exc.UniqueFieldError:
+        raise api_exc.EntityAlreadyExistException('User')

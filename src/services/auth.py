@@ -5,7 +5,7 @@ from functools import lru_cache
 import fastapi
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.core.exceptions as int_exc
+import src.core.exceptions as domain_exc
 import src.infrastructure.database.repositories as repo
 import src.models.http.auth as auth_http_models
 from src.utils.auth import Auth, get_auth
@@ -44,18 +44,18 @@ class AuthService(IAuthService):
         new_user.password = self.__auth.get_password_hash(new_user.password)
         try:
             await self.__user_repo.create(new_user, session)
-        except int_exc.UniqueFieldError as e:
+        except domain_exc.UniqueFieldError as e:
             logger.info('Trying to register user with existing field', exc_info=e)
             raise
 
     async def login(self, user_credentials: auth_http_models.LoginRequest, session: AsyncSession) -> tuple[str, str]:
         try:
             user = await self.__user_repo.get_by_email(user_credentials.email, session)
-        except int_exc.NotFoundError as e:
+        except domain_exc.NotFoundError as e:
             logger.info('Trying to login to non-existent account', exc_info=e)
             raise
         if not self.__auth.verify_password(user_credentials.password, user.password):
-            raise int_exc.InvalidPassword
+            raise domain_exc.InvalidPassword
         access_token = self.__auth.encode_token(user.id)
         refresh_token = self.__auth.encode_refresh_token(user.id)
         return access_token, refresh_token

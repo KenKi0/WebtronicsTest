@@ -5,7 +5,7 @@ from functools import lru_cache
 import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import src.core.exceptions as exc
+import src.core.exceptions as domain_exc
 import src.models.dto.user as user_internal_models
 import src.models.http.auth as auth_http_mdl
 import src.models.http.user as user_http_mdl
@@ -42,7 +42,7 @@ class UserSqlalchemyRepositoryProtocol(IUserRepository):
         result: sqlalchemy.engine.cursor.CursorResult = await session.execute(query)  # type: ignore
         user: User | None = result.scalars().one_or_none()
         if user is None:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         await session.commit()
         return user_internal_models.User(**user.as_dict(exclude_non_tabel_columns=True))
 
@@ -62,7 +62,7 @@ class UserSqlalchemyRepositoryProtocol(IUserRepository):
         query = sqlalchemy.update(User).where(User.id == user_id).values(**updated_fields.dict(exclude_none=True))
         result: sqlalchemy.engine.cursor.CursorResult = await session.execute(query)  # type: ignore
         if result.rowcount == 0:
-            raise exc.NotFoundError
+            raise domain_exc.NotFoundError
         await session.commit()
 
 
